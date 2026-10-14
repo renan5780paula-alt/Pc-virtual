@@ -1,0 +1,30 @@
+name: PC Virtual Completo
+
+on:
+  workflow_dispatch: # Permite iniciar a máquina virtual manualmente pelo site do GitHub
+
+jobs:
+  virtual-pc:
+    runs-on: macos-latest # Mac OS possui suporte nativo ideal para rodar hypervisores aninhados
+
+    steps:
+      - name: Checkout do Repositório
+        uses: actions/checkout@v4
+
+      # Esta Action cria uma máquina virtual completa isolada (ex: Ubuntu limpo) dentro do runner do GitHub
+      - name: Iniciar e Configurar PC Virtual
+        uses: cross-platform-action/action@v0.25.0
+        with:
+          operating_system: 'ubuntu'
+          version: '22.04'
+          memory: '4GB'
+          cpu_count: 2
+          run: |
+            echo "=== CONECTADO NO PC VIRTUAL COM SUCESSO! ==="
+            echo "Informações do Sistema Operacional Virtual:"
+            uname -a
+            cat /etc/os-release
+            
+            echo "=== Testando ferramentas básicas ==="
+            sudo apt update && sudo apt install -y htop neofetch
+            neofetch
